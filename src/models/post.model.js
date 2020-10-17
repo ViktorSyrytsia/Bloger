@@ -1,10 +1,10 @@
-import { Schema, Types } from 'mongoose';
+const { Schema, Types, model } = require('mongoose');
 
 const postSchema = new Schema({
     title: { type: String, unique: true, required: true },
     author: { type: Types.ObjectId, ref: 'User' },
     body: { type: String, required: true },
-    comments: [{ type: String, ref: Comment }],
+    comments: [{ type: String, ref: 'Comment' }],
     meta: {
         votes: Number,
         favs: Number
@@ -12,4 +12,4 @@ const postSchema = new Schema({
     date: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model('Post', postSchema);
+module.exports = model('Post', postSchema);
