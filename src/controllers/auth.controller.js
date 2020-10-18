@@ -1,17 +1,33 @@
 const { UserModel } = require('../models');
-const { success, fail } = require('../helpers/http-response')
-const HttpError = require('../helpers/http-error');
-const { INTERNAL_SERVER_ERROR } = require('http-status-codes');
 
 const register = async (req, res) => {
+
+};
+
+const login = async (req, res) => {
     try {
-        const user = await UserModel.create({ ...req.body });
-        return success(req, 200, user)
+        const user = await UserModel.findOne({ email: req.body.email });
+        const isValid = await user.validatePassword(req.body.password);
+        console.log(isValid);
+        if (isValid) {
+            res.status(200).json({
+                status: "ok",
+                token: user.generateJWT()
+            })
+        }
+
+
     } catch (error) {
-        return fail(req, new HttpError(errpr.code || INTERNAL_SERVER_ERROR, error.message))
+
     }
 }
 
+const logout = async (req, res) => {
+    res.status(200).json({
+        data: req.user
+    })
+};
+
 module.exports = {
-    register
+    register, login, logout
 }

@@ -34,6 +34,7 @@ userSchema.methods.generateJWT = function () {
     }, 'secret');
 }
 
+
 userSchema.methods.toAuthJSON = function () {
     return {
         _id: this._id,
