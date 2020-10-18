@@ -14,14 +14,14 @@ const register = async (req, res) => {
     if (!user.password) {
       throw new HttpError(BAD_REQUEST, 'Password is require');
     }
+    if (await userModel.findOne({ email: user.email })) {
+      throw new HttpError(BAD_REQUEST, 'User with this email, already exist');
+    }
     const userToSave = new userModel(user);
     userToSave.setPassword(user.password);
-    success(res, OK, {
-      status: 'success',
-      data: (await userToSave.save()).toAuthJson()
-    });
+    return success(res, OK, { user: userToSave.toAuthJSON() });
   } catch (error) {
-    fail(res, new HttpError(error.code || INTERNAL_SERVER_ERROR, error.message));
+    return fail(res, new HttpError(error.code || INTERNAL_SERVER_ERROR, error.message));
   }
 };
 
