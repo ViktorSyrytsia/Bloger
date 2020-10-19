@@ -21,5 +21,6 @@ app.engine('jsx', erv.createEngine(options));
 app.post('/login', authController.login);
 app.post('/register', authController.register);
 app.get('/logout', me, authController.logout);
+app.post('/refresh-token', authController.refreshToken);
 
 module.exports = app;

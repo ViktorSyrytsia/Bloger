@@ -2,6 +2,7 @@ const { NOT_FOUND, UNAUTHORIZED, OK, INTERNAL_SERVER_ERROR, BAD_REQUEST } = requ
 
 const { UserModel } = require('../models');
 const { fail, success } = require('../helpers/http-response');
+const jwtr = require('../config/jwt-redis');
 const HttpError = require('../helpers/http-error');
 const userModel = require('../models/user.model');
 
@@ -37,7 +38,6 @@ const login = async (req, res) => {
       throw new HttpError(NOT_FOUND, 'User with this email is not found');
     }
     const isValid = await user.validatePassword(req.body.password);
-    console.log(isValid);
     if (!isValid) {
       throw new HttpError(UNAUTHORIZED, 'Wrong password');
     }
@@ -50,7 +50,34 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
-    return success(res, OK, { ...req.user });
+    const user = await userModel.findById(req.user._id);
+    if (!user) {
+      throw new HttpError(NOT_FOUND, 'User not found');
+    }
+    await jwtr.destroy(user._id.toHexString()).catch(err => {
+      if (err) {
+        throw new HttpError(INTERNAL_SERVER_ERROR, 'User already logged out');
+      }
+    });
+    return success(res, OK, {});
+  } catch (error) {
+    return fail(res, new HttpError(error.code || INTERNAL_SERVER_ERROR, error.message));
+  }
+};
+
+const refreshToken = async (req, res) => {
+  try {
+    const refreshToken = req.headers.refreshtoken;
+    const decoded = await jwtr.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET).catch(err => {
+      if (err) {
+        throw new HttpError(INTERNAL_SERVER_ERROR, err);
+      }
+    });
+    if (!decoded) {
+      throw new HttpError(BAD_REQUEST, 'Invalid refresh token');
+    }
+    const user = await userModel.findById(decoded.id);
+    return success(res, OK, await user.toAuthJSON());
   } catch (error) {
     return fail(res, new HttpError(error.code || INTERNAL_SERVER_ERROR, error.message));
   }
@@ -59,5 +86,6 @@ const logout = async (req, res) => {
 module.exports = {
   register,
   login,
-  logout
+  logout,
+  refreshToken
 };

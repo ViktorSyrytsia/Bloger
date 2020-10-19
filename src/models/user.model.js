@@ -25,24 +25,40 @@ userSchema.methods.validatePassword = function (password) {
 userSchema.methods.generateJWT = async function () {
   const today = new Date();
   const expirationDate = new Date(today);
-  expirationDate.setDate(today.getDate() + 60);
-
+  expirationDate.setDate(today.getDate() + 7);
   return await jwtr.sign(
     {
-      jti: this._id,
+      jti: this._id.toHexString(),
       email: this.email,
       id: this._id,
       exp: parseInt(expirationDate.getTime() / 1000, 10)
     },
-    'secret'
+    process.env.ACCESS_TOKEN_SECRET
+  );
+};
+
+userSchema.methods.generateRefreshJWT = async function () {
+  const today = new Date();
+  const expirationDate = new Date(today);
+  expirationDate.setDate(today.getDate() + 60);
+  return await jwtr.sign(
+    {
+      jti: 'refresh' + this._id.toHexString(),
+      email: this.email,
+      id: this._id,
+      exp: parseInt(expirationDate.getTime() / 1000, 10)
+    },
+    process.env.REFRESH_TOKEN_SECRET
   );
 };
 
 userSchema.methods.toAuthJSON = async function () {
   return {
     _id: this._id,
+    username: this.username,
     email: this.email,
-    token: await this.generateJWT()
+    token: await this.generateJWT(),
+    refreshToken: await this.generateRefreshJWT()
   };
 };
 
@@ -52,7 +68,8 @@ userSchema.methods.toNonHashJson = function () {
     email: this.email,
     username: this.username,
     comments: this.comments,
-    rating: this.rating
+    rating: this.rating,
+    date: this.date
   };
 };
 

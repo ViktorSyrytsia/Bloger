@@ -9,9 +9,9 @@ exports.me = async (req, res, next) => {
   try {
     if (req.headers && req.headers.authorization) {
       const authorization = req.headers.authorization;
-      const decoded = await jwtr.verify(authorization, 'secret').catch(err => {
+      const decoded = await jwtr.verify(authorization, process.env.ACCESS_TOKEN_SECRET).catch(err => {
         if (err) {
-          throw new HttpError(INTERNAL_SERVER_ERROR, 'You are already logged out');
+          throw new HttpError(INTERNAL_SERVER_ERROR, err);
         }
       });
       if (!decoded) {
