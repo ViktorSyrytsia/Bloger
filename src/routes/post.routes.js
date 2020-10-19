@@ -1,10 +1,12 @@
 const { Router } = require('express');
-const { postCreationForm, newPost } = require('../controllers/post.controller');
+const {
+  createPostForm,
+  createPost,
+} = require('../controllers/post.controller');
 
 const router = new Router();
 
-// router.route('/').get(createPost);
-router.route('/create-post').get(postCreationForm);
-router.route('/create-post').post(newPost);
+router.route('/create-post-form').get(createPostForm);
+router.route('/new').post(createPost);
 
 module.exports = router;

@@ -7,9 +7,9 @@ const postSchema = new Schema({
   comments: [{ type: String, ref: 'Comment' }],
   meta: {
     votes: Number,
-    favs: Number
+    favs: Number,
   },
-  date: { type: Date, default: Date.now }
+  date: { type: Date, default: Date.now },
 });
 
 module.exports = model('Post', postSchema);

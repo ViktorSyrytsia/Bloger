@@ -1,10 +1,12 @@
+const { INTERNAL_SERVER_ERROR } = require('http-status-codes');
 const HttpError = require('../helpers/http-error');
 const { PostModel } = require('../models/index');
 
-const create = async () => {
+const create = async (post) => {
   try {
-    const post = await PostModel.create({});
-    return post;
+    const createdPost = await PostModel.create(post);
+    console.log('SERVICE', createdPost);
+    return createdPost;
   } catch (error) {
     throw new HttpError(INTERNAL_SERVER_ERROR, error.message);
   }
@@ -50,5 +52,5 @@ module.exports = {
   update,
   deleteById,
   findAll,
-  findById
+  findById,
 };

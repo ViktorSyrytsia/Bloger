@@ -12,6 +12,7 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(express.static('public'));
 
 const options = { beautify: true, doctype: '<!DOCTYPE html>' };
 
