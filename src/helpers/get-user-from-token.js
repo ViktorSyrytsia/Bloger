@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken');
-const { UNAUTHORIZED } = require('http-status-codes');
+const jwtr = require('../config/jwt-redis');
+const { UNAUTHORIZED, INTERNAL_SERVER_ERROR } = require('http-status-codes');
 
 const { UserModel } = require('../models/index');
 const { fail } = require('./http-response');
@@ -9,17 +9,21 @@ exports.me = async (req, res, next) => {
   try {
     if (req.headers && req.headers.authorization) {
       const authorization = req.headers.authorization;
-      const decoded = jwt.verify(authorization, 'secret');
+      const decoded = await jwtr.verify(authorization, 'secret').catch(err => {
+        if (err) {
+          throw new HttpError(INTERNAL_SERVER_ERROR, 'You are already logged out');
+        }
+      });
       if (!decoded) {
         throw new HttpError(UNAUTHORIZED, 'Unauthorized');
       }
       const userId = decoded.id;
-      req.user = await UserModel.findById(userId);
+      req.user = await UserModel.findById(userId).lean().select(['-hash', '-salt']);
       next();
     } else {
       throw new HttpError(UNAUTHORIZED, 'Authorization headers are required');
     }
   } catch (error) {
-    fail(res, error);
+    return fail(res, error);
   }
 };

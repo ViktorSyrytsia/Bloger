@@ -19,7 +19,12 @@ const register = async (req, res) => {
     }
     const userToSave = new userModel(user);
     userToSave.setPassword(user.password);
-    return success(res, OK, { user: userToSave.toAuthJSON() });
+    await userToSave.save().catch(err => {
+      if (err) {
+        throw new HttpError(INTERNAL_SERVER_ERROR, err.message);
+      }
+    });
+    return success(res, OK, { user: await userToSave.toAuthJSON() });
   } catch (error) {
     return fail(res, new HttpError(error.code || INTERNAL_SERVER_ERROR, error.message));
   }
@@ -32,19 +37,23 @@ const login = async (req, res) => {
       throw new HttpError(NOT_FOUND, 'User with this email is not found');
     }
     const isValid = await user.validatePassword(req.body.password);
+    console.log(isValid);
     if (!isValid) {
       throw new HttpError(UNAUTHORIZED, 'Wrong password');
     }
-    success(res, OK, await user.generateJWT());
+    return success(res, OK, await user.toAuthJSON());
   } catch (error) {
-    fail(res, new HttpError(error.code || INTERNAL_SERVER_ERROR, error.message));
+    console.log(error);
+    return fail(res, new HttpError(error.code || INTERNAL_SERVER_ERROR, error.message));
   }
 };
 
 const logout = async (req, res) => {
-  res.status(200).json({
-    data: req.user
-  });
+  try {
+    return success(res, OK, { ...req.user });
+  } catch (error) {
+    return fail(res, new HttpError(error.code || INTERNAL_SERVER_ERROR, error.message));
+  }
 };
 
 module.exports = {
