@@ -5,6 +5,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 
 const authRouter = require('./routes/auth.routes');
+const postRouter = require('./routes/post.routes');
 
 const app = express();
 app.use(cors());
@@ -19,5 +20,6 @@ app.set('view engine', 'jsx');
 app.engine('jsx', erv.createEngine(options));
 
 app.use('/auth', authRouter);
+app.use('/posts', postRouter);
 
 module.exports = app;
