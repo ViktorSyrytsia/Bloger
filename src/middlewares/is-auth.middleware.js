@@ -2,10 +2,10 @@ const jwtr = require('../config/jwt-redis');
 const { UNAUTHORIZED, INTERNAL_SERVER_ERROR } = require('http-status-codes');
 
 const { UserModel } = require('../models/index');
-const { fail } = require('./http-response');
-const HttpError = require('./http-error');
+const { fail } = require('../helpers/http-response');
+const HttpError = require('../helpers/http-error');
 
-exports.me = async (req, res, next) => {
+const isAuth = async (req, res, next) => {
   try {
     if (req.headers && req.headers.authorization) {
       const authorization = req.headers.authorization;
@@ -27,3 +27,4 @@ exports.me = async (req, res, next) => {
     return fail(res, error);
   }
 };
+module.exports = isAuth;

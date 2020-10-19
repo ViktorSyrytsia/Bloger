@@ -3,8 +3,8 @@ const erv = require('express-react-views');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
-const authController = require('./controllers/auth.controller');
-const { me } = require('./helpers/get-user-from-token');
+
+const authRouter = require('./routes/auth.routes');
 
 const app = express();
 app.use(cors());
@@ -18,9 +18,6 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'jsx');
 app.engine('jsx', erv.createEngine(options));
 
-app.post('/login', authController.login);
-app.post('/register', authController.register);
-app.get('/logout', me, authController.logout);
-app.post('/refresh-token', authController.refreshToken);
+app.use('/auth', authRouter);
 
 module.exports = app;
