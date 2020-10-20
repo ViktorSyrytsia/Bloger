@@ -24,7 +24,7 @@ function Layout(props) {
           }}
         />
       </head>
-      <body className='container'>{props.children}</body>
+      <body>{props.children}</body>
     </html>
   );
 }
