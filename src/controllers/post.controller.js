@@ -24,7 +24,15 @@ const createPost = async (req, res) => {
   }
 };
 
+const findAllPosts = async (req, res) => {
+  try {
+    const posts = await postService.findAll();
+    return res.status(OK).render('post', { posts });
+  } catch (error) {}
+};
+
 module.exports = {
+  findAllPosts,
   createPostForm,
   createPost,
 };

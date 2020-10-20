@@ -5,7 +5,6 @@ const { PostModel } = require('../models/index');
 const create = async (post) => {
   try {
     const createdPost = await PostModel.create(post);
-    console.log('SERVICE', createdPost);
     return createdPost;
   } catch (error) {
     throw new HttpError(INTERNAL_SERVER_ERROR, error.message);
@@ -31,7 +30,7 @@ const deleteById = async () => {
 
 const findAll = async () => {
   try {
-    const posts = await PostModel.find({});
+    const posts = await PostModel.find({}).populate('author');
     return posts;
   } catch (error) {
     throw new HttpError(INTERNAL_SERVER_ERROR, error.message);
