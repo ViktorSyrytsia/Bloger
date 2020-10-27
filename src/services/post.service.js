@@ -37,9 +37,9 @@ const findAll = async () => {
   }
 };
 
-const findById = async () => {
+const findById = async (id) => {
   try {
-    const post = await PostModel.findById({});
+    const post = await PostModel.findById(id);
     return post;
   } catch (error) {
     throw new HttpError(INTERNAL_SERVER_ERROR, error.message);

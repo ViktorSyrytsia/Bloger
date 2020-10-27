@@ -28,11 +28,30 @@ const findAllPosts = async (req, res) => {
   try {
     const posts = await postService.findAll();
     return res.status(OK).render('posts', { posts });
-  } catch (error) {}
+  } catch (error) {
+    return fail(
+      res,
+      new HttpError(error.code || INTERNAL_SERVER_ERROR, error.message)
+    );
+  }
 };
+
+const postDetails = async (req, res) => {
+  try {
+    const post = await postService.findById(req.params.id);
+    const user = await userModel.findById(post.author)
+    return res.status(OK).render('post-detail', { post, user })
+  } catch (error) {
+    return fail(
+      res,
+      new HttpError(error.code || INTERNAL_SERVER_ERROR, error.message)
+    );
+  }
+}
 
 module.exports = {
   findAllPosts,
   createPostForm,
   createPost,
+  postDetails
 };
