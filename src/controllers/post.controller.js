@@ -5,17 +5,17 @@ const userModel = require('../models/user.model');
 const postService = require('../services/post.service');
 
 const createPostForm = async (req, res) => {
-  return res.status(OK).render('create-post-form');
+  return res.status(OK).render('./posts/create-post-form');
 };
 
 const createPost = async (req, res) => {
   try {
-    const post = await postService.create({
+    await postService.create({
       author: '5f8d5db75654481cf24e0b2d',
       ...req.body,
     });
-    const user = await userModel.findById(post.author).lean();
-    return res.status(OK).render('post', { post, user });
+    const posts = await postService.findAll();
+    return res.status(OK).render('./posts/posts', { posts });
   } catch (error) {
     return fail(
       res,
@@ -26,9 +26,8 @@ const createPost = async (req, res) => {
 
 const findAllPosts = async (req, res) => {
   try {
-    console.log(req.session);
     const posts = await postService.findAll();
-    return res.status(OK).render('posts', { posts });
+    return res.status(OK).render('./posts/posts', { posts });
   } catch (error) {
     return fail(
       res,
@@ -41,7 +40,7 @@ const postDetails = async (req, res) => {
   try {
     const post = await postService.findById(req.params.id);
     const user = await userModel.findById(post.author)
-    return res.status(OK).render('post-detail', { post, user })
+    return res.status(OK).render('./posts/post-detail', { post, user })
   } catch (error) {
     return fail(
       res,

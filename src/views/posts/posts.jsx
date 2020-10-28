@@ -1,8 +1,8 @@
 const React = require('react');
 
-const Layout = require('./layout');
+const Layout = require('../layout');
 const PostCard = require('./post-card');
-const Header = require('./header');
+const Header = require('../header');
 
 const Posts = ({ posts }) => {
   return (

@@ -25,8 +25,7 @@ const register = async (req, res) => {
         throw new HttpError(INTERNAL_SERVER_ERROR, err.message);
       }
     });
-    req.session.userId = user._id;
-    return success(res, OK, { user: await userToSave.toAuthJSON() });
+    return status(OK).render('./common/sucsess', { user: await userToSave.toAuthJSON() })
   } catch (error) {
     return fail(res, new HttpError(error.code || INTERNAL_SERVER_ERROR, error.message));
   }
@@ -85,9 +84,18 @@ const refreshToken = async (req, res) => {
   }
 };
 
+const registrationForm = async (req, res) => {
+  try {
+    return res.status(OK).render('./auth/registration-form');
+  } catch (error) {
+    return fail(res, new HttpError(error.code || INTERNAL_SERVER_ERROR, error.message));
+  }
+}
+
 module.exports = {
   register,
   login,
   logout,
-  refreshToken
+  refreshToken,
+  registrationForm
 };

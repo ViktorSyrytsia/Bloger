@@ -1,7 +1,7 @@
 const React = require('react');
 
-const Layout = require('./layout');
-const Header = require('./header');
+const Layout = require('../layout');
+const Header = require('../header');
 
 const PostDetail = ({ post, user }) => {
   return (

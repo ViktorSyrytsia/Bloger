@@ -1,8 +1,8 @@
 const React = require('react');
 const { Formik, Field, Form } = require('formik');
-const Header = require('./header');
+const Header = require('../header');
 
-const Layout = require('./layout');
+const Layout = require('../layout');
 
 const CteatePostForm = () => (
   <Layout>

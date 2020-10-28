@@ -25,6 +25,7 @@ function Layout(props) {
         />
       </head>
       <body>{props.children}</body>
+      <script src="../main.js"></script>
     </html>
   );
 }

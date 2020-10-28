@@ -30,7 +30,7 @@ const deleteById = async () => {
 
 const findAll = async () => {
   try {
-    const posts = await PostModel.find({}).populate('author');
+    const posts = await PostModel.find({}).sort({ date: -1 }).populate('author');
     return posts;
   } catch (error) {
     throw new HttpError(INTERNAL_SERVER_ERROR, error.message);
