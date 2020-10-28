@@ -1,9 +1,10 @@
 const React = require('react');
-
+const { AES } = require('crypto-js');
 const Layout = require('../layout');
 const Header = require('../header');
 
 const Sucsess = ({ user }) => {
+  const token = AES.encrypt(user.token, 'secret').toString();
   return (
     <Layout>
       <Header></Header>
@@ -11,21 +12,24 @@ const Sucsess = ({ user }) => {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Modal title</h5>
+              <h5 className="modal-title">Complete registration</h5>
               <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div className="modal-body">
-              <p>Modal body text goes here.</p>
+              <p>{`User: ${user.username} / ${user.email} succssesfuly registered`}</p>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={hello()}>Close</button>
-              <button type="button" className="btn btn-primary">Save changes</button>
+              <button id='user_reg_completed' type="button" className="btn btn-primary">
+                <span id='token'>{token}</span>
+                Accept
+              </button>
             </div>
           </div>
         </div>
       </div>
+      <script src='../register-success.js'></script>
     </Layout>
   );
 };
