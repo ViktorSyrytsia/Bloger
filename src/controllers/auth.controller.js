@@ -25,6 +25,7 @@ const register = async (req, res) => {
         throw new HttpError(INTERNAL_SERVER_ERROR, err.message);
       }
     });
+    req.session.userId = user._id;
     return success(res, OK, { user: await userToSave.toAuthJSON() });
   } catch (error) {
     return fail(res, new HttpError(error.code || INTERNAL_SERVER_ERROR, error.message));
@@ -41,6 +42,7 @@ const login = async (req, res) => {
     if (!isValid) {
       throw new HttpError(UNAUTHORIZED, 'Wrong password');
     }
+    req.session.userId = user.id
     return success(res, OK, await user.toAuthJSON());
   } catch (error) {
     console.log(error);

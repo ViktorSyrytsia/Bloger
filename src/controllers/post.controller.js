@@ -26,6 +26,7 @@ const createPost = async (req, res) => {
 
 const findAllPosts = async (req, res) => {
   try {
+    console.log(req.session);
     const posts = await postService.findAll();
     return res.status(OK).render('posts', { posts });
   } catch (error) {
