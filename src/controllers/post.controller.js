@@ -7,12 +7,12 @@ const postService = require('../services/post.service');
 const createPostForm = async (req, res) => {
   return res.status(OK).render('./posts/create-post-form');
 };
-
 const createPost = async (req, res) => {
   try {
+    const body = JSON.parse(Object.keys(req.body)[0]);
     await postService.create({
-      author: '5f8d5db75654481cf24e0b2d',
-      ...req.body,
+      author: req.user._id,
+      ...body,
     });
     const posts = await postService.findAll();
     return res.status(OK).render('./posts/posts', { posts });
@@ -27,6 +27,7 @@ const createPost = async (req, res) => {
 const findAllPosts = async (req, res) => {
   try {
     const posts = await postService.findAll();
+    console.log(posts);
     return res.status(OK).render('./posts/posts', { posts });
   } catch (error) {
     return fail(
@@ -39,19 +40,19 @@ const findAllPosts = async (req, res) => {
 const postDetails = async (req, res) => {
   try {
     const post = await postService.findById(req.params.id);
-    const user = await userModel.findById(post.author)
-    return res.status(OK).render('./posts/post-detail', { post, user })
+    const user = await userModel.findById(post.author);
+    return res.status(OK).render('./posts/post-detail', { post, user });
   } catch (error) {
     return fail(
       res,
       new HttpError(error.code || INTERNAL_SERVER_ERROR, error.message)
     );
   }
-}
+};
 
 module.exports = {
   findAllPosts,
   createPostForm,
   createPost,
-  postDetails
+  postDetails,
 };

@@ -15,18 +15,17 @@ const CteatePostForm = () => (
             title: '',
             body: '',
           }}
-          onSubmit={async (values) => {
-            console.log(values);
-          }}
         >
           {({ isSubmitting }) => (
             <Form
+              id='create_post_form'
               className='d-flex flex-column col-5 bg-light p-3 rounded-sm border'
-              method='post'
-              action='/posts/new'
+              method='get'
+              action='/posts'
             >
               <label htmlFor='title'>Title:</label>
               <Field
+                id='post_title'
                 className='border p-2'
                 name='title'
                 placeholder='post title...'
@@ -36,6 +35,7 @@ const CteatePostForm = () => (
                 Body:
               </label>
               <Field
+                id='post_body'
                 className='border p-2'
                 component='textarea'
                 name='body'
@@ -54,6 +54,7 @@ const CteatePostForm = () => (
         </Formik>
       </div>
     </div>
+    <script src='../create-post.js'></script>
   </Layout>
 );
 
