@@ -37,6 +37,7 @@ const Registration = ({ posts }) => {
             <Field
               type='email'
               className='border p-2'
+
               name='email'
               placeholder='email...'
             />

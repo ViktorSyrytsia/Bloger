@@ -25,7 +25,7 @@ const register = async (req, res) => {
         throw new HttpError(INTERNAL_SERVER_ERROR, err.message);
       }
     });
-    return status(OK).render('./common/sucsess', { user: await userToSave.toAuthJSON() })
+    return res.status(OK).render('./common/sucsess', { user: await userToSave.toAuthJSON() })
   } catch (error) {
     return fail(res, new HttpError(error.code || INTERNAL_SERVER_ERROR, error.message));
   }
