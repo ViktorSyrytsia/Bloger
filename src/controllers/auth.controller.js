@@ -117,10 +117,25 @@ const registrationForm = async (req, res) => {
   }
 };
 
+const me = async (req, res) => {
+  try {
+    return res.status(OK).json({
+      status: 'success',
+      data: req.user.username,
+    });
+  } catch (error) {
+    return fail(
+      res,
+      new HttpError(error.code || INTERNAL_SERVER_ERROR, error.message)
+    );
+  }
+};
+
 module.exports = {
   register,
   login,
   logout,
   refreshToken,
   registrationForm,
+  me,
 };

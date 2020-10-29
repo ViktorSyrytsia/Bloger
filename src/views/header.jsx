@@ -30,15 +30,20 @@ const Header = () => {
               Create post
             </a>
           </li>
-          <li className='nav-item '>
-            <a className="nav-link" href='/auth/registration-form'>Register</a>
+          <li id='register' className='nav-item '>
+            <a className='nav-link' href='/auth/registration-form'>
+              Register
+            </a>
           </li>
-          <li className='nav-item'>
-
-            <a className="nav-link" href='/auth/login-form'>Login</a>
+          <li id='login' className='nav-item'>
+            <a className='nav-link' href='/auth/login-form'>
+              Login
+            </a>
           </li>
           <li className='nav-item '>
-            <a className="nav-link" href='/auth/logout mr-auto'>Logout</a>
+            <a className='nav-link' href='/auth/logout'>
+              Logout
+            </a>
           </li>
         </ul>
       </div>

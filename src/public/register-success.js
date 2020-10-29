@@ -17,6 +17,5 @@ const user_reg_success_btn = document.getElementById('user_reg_completed');
 user_reg_success_btn.addEventListener('click', (e) => {
   const bytes = this.CryptoJS.AES.decrypt(token.innerHTML, 'secret');
   const originalToken = bytes.toString(this.CryptoJS.enc.Utf8);
-  console.log(originalToken);
   localStorage.setItem('token', originalToken);
 });
